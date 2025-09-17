@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Relatórios{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Relatórios</h1>
+<a href="{% url 'relatorios:criar_relatorio' %}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">Novo Relatório</a>
+<a href="{% url 'relatorios:exportar_csv' %}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Exportar CSV</a>
+<table class="table-auto w-full bg-white shadow rounded">
+    <tr class="bg-gray-200">
+        <th>ID</th>
+        <th>Título</th>
+        <th>Descrição</th>
+        <th>Data</th>
+        <th>Criado Por</th>
+        <th>Atualizado Em</th>
+    </tr>
+    {% for r in relatorios %}
+    <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.titulo }}</td>
+        <td>{{ r.descricao }}</td>
+        <td>{{ r.data }}</td>
+        <td>{{ r.criado_por.username }}</td>
+        <td>{{ r.atualizado_em }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

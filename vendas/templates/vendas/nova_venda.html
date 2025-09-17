@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Nova Venda{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-6 rounded shadow mt-6">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-700">Registrar Nova Venda</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 p-3 rounded {{ message.tags }} {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="block font-medium text-gray-700">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ field.errors|striptags }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors">
+            Registrar Venda
+        </button>
+    </form>
+</div>
+{% endblock %}

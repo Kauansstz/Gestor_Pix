@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Pix{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Transações Pix</h1>
+<table class="table-auto w-full bg-white shadow rounded">
+    <tr class="bg-gray-200">
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Data</th>
+    </tr>
+    {% for pix in pix_list %}
+    <tr>
+        <td>{{ pix.id }}</td>
+        <td>{{ pix.user.username }}</td>
+        <td>R$ {{ pix.amount }}</td>
+        <td>{{ pix.status }}</td>
+        <td>{{ pix.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'pix:gerar_pix' %}" class="mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded">Gerar Pix</a>
+{% endblock %}
