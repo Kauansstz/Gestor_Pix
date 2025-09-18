@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.listar_relatorios, name='listar_relatorios'),
     path('<int:pk>/', views.relatorio_detail, name='detail'),
     path('exportar/', views.exportar_csv, name='exportar_csv'),
-        path('novo/', views.criar_relatorio, name='criar_relatorio'),
+    path('<int:pk>/editar/', views.editar_relatorio, name='editar_relatorio'),
+    path('novo/', views.criar_relatorio, name='criar_relatorio'),
 
 ]

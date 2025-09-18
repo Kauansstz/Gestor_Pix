@@ -96,3 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+module.exports = {
+    darkMode: 'class', // ou 'media'
+    content: ["./templates/**/*.html", "./static/**/*.js"],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
+}

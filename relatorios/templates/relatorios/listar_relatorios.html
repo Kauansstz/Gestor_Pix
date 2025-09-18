@@ -21,7 +21,11 @@
         <td>{{ r.data }}</td>
         <td>{{ r.criado_por.username }}</td>
         <td>{{ r.atualizado_em }}</td>
+        <td>
+            <a href="{% url 'relatorios:editar_relatorio' r.id %}" class="bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
+        </td>
     </tr>
     {% endfor %}
 </table>
+
 {% endblock %}

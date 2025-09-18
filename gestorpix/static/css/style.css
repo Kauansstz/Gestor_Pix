@@ -145,6 +145,8 @@ input:focus, select:focus, textarea:focus {
     font-weight: 500;
 }
 
+
+
 .alert-success {
     background-color: #d1fae5; /* green-100 */
     color: #065f46; /* green-900 */
@@ -155,3 +157,11 @@ input:focus, select:focus, textarea:focus {
     color: #991b1b; /* red-900 */
 }
 
+ [data-theme="dark"] {
+    --tw-bg-opacity: 1;
+    background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
+    color: #f9fafb;
+}
+[data-theme="dark"] a { color: #f9fafb; }
+[data-theme="dark"] .bg-white { background-color: #1f2937; }
+[data-theme="dark"] .text-black { color: #f9fafb; }
