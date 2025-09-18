@@ -165,3 +165,20 @@ input:focus, select:focus, textarea:focus {
 [data-theme="dark"] a { color: #f9fafb; }
 [data-theme="dark"] .bg-white { background-color: #1f2937; }
 [data-theme="dark"] .text-black { color: #f9fafb; }
+
+
+.links_pages{
+    gap: 20px;
+}
+.links_pages a{
+    gap: 10px;
+}
+
+.btn_expand{
+    
+    margin: 0 auto;
+}
+
+.config-btn{
+    font-size: 25px;
+}
