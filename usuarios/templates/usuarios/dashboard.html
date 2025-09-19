@@ -3,43 +3,49 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Bem-vindo, {{ user.username }}!</h1>
+ <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Olá, {{ request.user.username }}</h1>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Gráfico Doughnut -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
-        <h2 class="text-xl font-bold mb-4">Resumo Financeiro</h2>
-        <canvas id="financeChart"></canvas>
+        <div class="flex space-x-4 mb-6">
+            <a href="{% url 'usuarios:logout' %}" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded font-semibold">
+                Sair
+            </a>
+        </div>
+
+        <div class="bg-white rounded shadow p-6">
+            <h2 class="text-2xl font-bold mb-4">Transações</h2>
+
+            <div class="mb-4">
+                <span class="font-semibold">Total Entrada:</span> R$ {{ total_entrada }}
+            </div>
+            <div class="mb-4">
+                <span class="font-semibold">Total Saída:</span> R$ {{ total_saida }}
+            </div>
+
+            <table class="w-full border-collapse border">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border px-4 py-2">Data</th>
+                        <th class="border px-4 py-2">Tipo</th>
+                        <th class="border px-4 py-2">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transacoes %}
+                    <tr class="text-center">
+                        <td class="border px-4 py-2">{{ t.data }}</td>
+                        <td class="border px-4 py-2">{{ t.tipo }}</td>
+                        <td class="border px-4 py-2">R$ {{ t.valor }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="border px-4 py-2">Nenhuma transação encontrada</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <!-- Histórico de transações -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow overflow-auto">
-        <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Histórico de Transações</h2>
-        <table class="table-auto w-full text-left">
-
-            <thead class="bg-gray-200 dark:bg-gray-700">
-                <tr>
-                    <th class="px-4 py-2">Data</th>
-                    <th class="px-4 py-2">Tipo</th>
-                    <th class="px-4 py-2">Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for t in transacoes %}
-                <tr class="border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <td class="px-4 py-2">{{ t.data|date:"d-m-Y H:i" }}</td>
-                    <td class="px-4 py-2">{{ t.tipo }}</td>
-                    <td class="px-4 py-2">R$ {{ t.valor }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" class="px-4 py-2">Nenhuma transação encontrada.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
 
 <script>
     const ctx = document.getElementById('financeChart').getContext('2d');

@@ -59,10 +59,18 @@ WSGI_APPLICATION = "gestorpix.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'suitecrm',            # nome do banco SuiteCRM
+        'USER': 'root',       # usuário criado
+        'PASSWORD': 'Kauan20145!',      # senha do usuário
+        'HOST': '127.0.0.1',           # geralmente localhost
+        'PORT': '3306',                # porta padrão do MySQL
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -72,12 +80,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'usuarios.User'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # padrão é correto
+SESSION_COOKIE_AGE = 1209600  # 2 semanas em segundos
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_SECURE = False
+
+SESSION_SAVE_EVERY_REQUEST = True  # opcional, força salvar a cada request
 
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Sao_Paulo"
 USE_I18N = True
 USE_TZ = True
-
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "gestorpix/static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

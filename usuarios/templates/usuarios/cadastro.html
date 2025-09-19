@@ -2,12 +2,37 @@
 {% block title %}Registrar{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl mb-4 font-bold">Registrar Usuário</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Registrar</button>
-    </form>
-</div>
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="block mb-1 font-semibold" for="username">Usuário</label>
+                <input type="text" name="username" id="username" placeholder="Digite seu usuário"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label class="block mb-1 font-semibold" for="email">E-mail</label>
+                <input type="email" name="email" id="email" placeholder="Digite seu e-mail"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label class="block mb-1 font-semibold" for="password">Senha</label>
+                <input type="password" name="password" id="password" placeholder="Digite sua senha"
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
+                Cadastrar
+            </button>
+        </form>
+
+        <p class="mt-4 text-center">
+            Já tem conta? <a href="{% url 'usuarios:login' %}" class="text-blue-500 font-semibold">Login</a>
+        </p>
+    </div>
 {% endblock %}
