@@ -1,25 +1,30 @@
 # relatorios/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from .models import Relatorio
 from .forms.RelatorioCustom import RelatorioForm
-import csv
 from django.http import HttpResponse
-from usuarios.utils.LoginRequired import login_required_session
+import csv
+
+User = get_user_model()
 
 
-@login_required_session
+@login_required
 def listar_relatorios(request):
     relatorios = Relatorio.objects.all()
     return render(request, 'relatorios/listar_relatorios.html', {'relatorios': relatorios})
 
-@login_required_session
+
+@login_required
 def criar_relatorio(request):
     if request.method == 'POST':
         form = RelatorioForm(request.POST)
         if form.is_valid():
             relatorio = form.save(commit=False)
-            relatorio.criado_por = request.user  # usa SessionUser
+            # Pega o User real do banco
+            relatorio.criado_por = request.user
             relatorio.save()
             messages.success(request, 'Relatório criado com sucesso!')
             return redirect('relatorios:listar_relatorios')
@@ -29,37 +34,15 @@ def criar_relatorio(request):
         form = RelatorioForm()
     return render(request, 'relatorios/criar_relatorio.html', {'form': form})
 
-@login_required_session
-def exportar_csv(request):
-    relatorios = Relatorio.objects.all()
-    response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = 'attachment; filename="relatorios.csv"'
-    response.write('\ufeff'.encode('utf8'))  # BOM para Excel
-    writer = csv.writer(response, delimiter=';')
-    writer.writerow(['ID', 'Título', 'Descrição', 'Data', 'Criado Por', 'Atualizado Em'])
-    for r in relatorios:
-        writer.writerow([
-            r.id,
-            r.titulo,
-            r.descricao,
-            r.data.strftime('%d-%m-%y') if r.data else '',
-            r.criado_por.username if r.criado_por else '',
-            r.atualizado_em.strftime('%d-%m-%y %H:%M') if r.atualizado_em else '',
-        ])
-    return response
 
-@login_required_session
-def relatorio_detail(request, pk):
-    relatorio = get_object_or_404(Relatorio, pk=pk)
-    return render(request, 'relatorios/relatorio_detail.html', {'relatorio': relatorio})
-
-@login_required_session
+@login_required
 def editar_relatorio(request, pk):
     relatorio = get_object_or_404(Relatorio, pk=pk)
+
     if request.method == 'POST':
         form = RelatorioForm(request.POST, instance=relatorio)
         if form.is_valid():
-            form.save()  # atualiza automaticamente 'atualizado_em'
+            form.save()  # automaticamente atualiza 'atualizado_em'
             messages.success(request, 'Relatório atualizado com sucesso!')
             return redirect('relatorios:listar_relatorios')
         else:
@@ -68,3 +51,30 @@ def editar_relatorio(request, pk):
         form = RelatorioForm(instance=relatorio)
 
     return render(request, 'relatorios/editar_relatorio.html', {'form': form, 'relatorio': relatorio})
+
+
+@login_required
+def relatorio_detail(request, pk):
+    relatorio = get_object_or_404(Relatorio, pk=pk)
+    return render(request, 'relatorios/relatorio_detail.html', {'relatorio': relatorio})
+
+
+@login_required
+def exportar_csv(request):
+    relatorios = Relatorio.objects.all()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="relatorios.csv"'
+    response.write('\ufeff'.encode('utf8'))  # BOM para Excel
+    writer = csv.writer(response, delimiter=';')
+    writer.writerow(['ID', 'Título', 'Descrição', 'Data', 'Criado Por', 'Atualizado Em'])
+
+    for r in relatorios:
+        writer.writerow([
+            r.id,
+            r.titulo,
+            r.descricao,
+            r.data.strftime('%d-%m-%y'),
+            r.criado_por.username,  # agora seguro porque é User custom
+            r.atualizado_em.strftime('%d-%m-%y %H:%M')
+        ])
+    return response

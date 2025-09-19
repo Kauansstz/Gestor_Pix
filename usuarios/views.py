@@ -1,88 +1,74 @@
+# usuarios/views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.db import connection
-import hashlib
+from django.contrib.auth import get_user_model, authenticate, login as django_login, logout as django_logout
+from django.contrib.auth.decorators import login_required
 from pix.models import PixTransaction
 from vendas.models import Venda
-from .utils.LoginRequired import authenticate_mysql, login_required_session
-from .utils.LoginRequired import SessionUser
-# Classe para simular request.user com sessão
+
+from .forms.UserCustom import LoginForm, RegisterForm  # forms personalizados
+
+User = get_user_model()
 
 
 # Login
 def login_view(request):
-    if request.session.get('user_id'):
-        return redirect("usuarios:dashboard")
+    if request.user.is_authenticated:
+        return redirect("usuarios:dashboard")  # já logado
 
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        user = authenticate_mysql(username, password)
+        user = authenticate_mysql(username, password)  # função de autenticação custom no MySQL
         if user:
-            # Cria sessão
-            request.user = SessionUser(user['id'], user['username'])
-            # Simula request.user
-            request.session['user_id'] = user['id']
-            request.session['username'] = user['username']
+            # Pega o User customizado do banco
+            django_user = User.objects.get(id=user['id'])
+            django_login(request, django_user)  # registra sessão do Django
             messages.success(request, "Login realizado com sucesso!")
-            request.user = SessionUser(user['id'], user['username'])
-            return render(request,"usuarios/dashboard.html")
+            return redirect("usuarios:dashboard")
         else:
             messages.error(request, "Usuário ou senha incorretos.")
 
-    return render(request, "usuarios/login.html")
+    form = LoginForm()
+    return render(request, "usuarios/login.html", {"form": form})
+
 
 # Logout
+@login_required
 def logout_view(request):
-    request.session.flush()
+    django_logout(request)
     messages.success(request, "Você saiu com sucesso!")
     return redirect("usuarios:login")
 
+
 # Cadastro
 def cadastro_view(request):
-    if request.session.get('user_id'):
+    if request.user.is_authenticated:
         return redirect("usuarios:dashboard")
 
+    form = RegisterForm(request.POST or None)
     if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        if not username or not email or not password:
-            messages.error(request, "Todos os campos são obrigatórios.")
-            return render(request, "usuarios/cadastro.html")
-
-        hashed = hashlib.sha256(password.encode()).hexdigest()
-
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO usuarios_user (username, password, email, is_active, date_joined) "
-                    "VALUES (%s, %s, %s, %s, NOW())",
-                    [username, hashed, email, 1]
-                )
+        if form.is_valid():
+            # Cria usuário no banco
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])  # criptografa senha
+            user.save()
             messages.success(request, "Conta criada com sucesso! Faça login.")
             return redirect("usuarios:login")
-        except Exception as e:
-            messages.error(request, f"Erro ao criar conta: {str(e)}")
+        else:
+            messages.error(request, "Erro ao criar conta. Verifique os dados.")
 
-    return render(request, "usuarios/cadastro.html")
+    return render(request, "usuarios/cadastro.html", {"form": form})
+
 
 # Dashboard
-
-
-@login_required_session
+@login_required
 def dashboard_view(request):
-    # Se estiver usando nossa sessão manual, simula request.user
-    if not hasattr(request, 'user') or not request.user.is_authenticated:
-        if request.session.get('user_id'):
-            request.user = SessionUser(request.session['user_id'], request.session['username'])
-        else:
-            return redirect("usuarios:login")
-
+    # Calcula entradas e saídas
     total_entrada = sum(p.valor for p in PixTransaction.objects.all())
     total_saida = sum(v.valor for v in Venda.objects.all())
 
+    # Histórico de transações
     transacoes = []
 
     for p in PixTransaction.objects.all():
@@ -99,12 +85,33 @@ def dashboard_view(request):
             'valor': v.valor
         })
 
+    # Ordena por data decrescente
     transacoes = sorted(transacoes, key=lambda x: x['data'], reverse=True)
 
     context = {
         'total_entrada': total_entrada,
         'total_saida': total_saida,
         'transacoes': transacoes,
-        'user': request.user
+        'request_user': request.user,  # para templates
     }
-    return render(request, 'usuarios/dashboard.html', context)
+    return render(request, "usuarios/dashboard.html", context)
+
+
+# Função de autenticação custom (MySQL)
+def authenticate_mysql(username, password):
+    """
+    Exemplo de autenticação manual no MySQL.
+    Retorna dict com 'id' e 'username' se válido, senão None
+    """
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute(
+        "SELECT id, username, password FROM usuarios_user WHERE username = %s", [username]
+    )
+    row = cursor.fetchone()
+    if row:
+        user_id, db_username, db_password = row
+        # Aqui você precisa validar a senha (hash ou plain)
+        if db_password == password:
+            return {'id': user_id, 'username': db_username}
+    return None
