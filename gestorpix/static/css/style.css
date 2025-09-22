@@ -11,6 +11,10 @@ body {
     background-color: #f3f4f6; /* gray-100 */
     color: #111827; /* gray-900 */
 }
+html, body {
+    height: 100%;
+}
+
 
 /* Navbar */
 nav {
@@ -39,6 +43,15 @@ nav a:hover {
     margin: 2rem auto;
     padding: 1rem;
 }
+
+.container-login {
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
 
 /* Botões */
 button, .btn {
@@ -181,4 +194,12 @@ input:focus, select:focus, textarea:focus {
 
 .config-btn{
     font-size: 25px;
+}
+
+.center {
+    margin-top: -5rem;
+}
+.baixo{
+    margin-top: 10rem;
+    margin-left: -4rem;
 }

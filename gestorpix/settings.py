@@ -81,7 +81,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'usuarios.User'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # padrão é correto
-SESSION_COOKIE_AGE = 1209600  # 2 semanas em segundos
+SESSION_COOKIE_AGE = 14400  # 4 horas em segundos
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
 
@@ -94,3 +94,5 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "gestorpix/static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+

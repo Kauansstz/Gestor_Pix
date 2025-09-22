@@ -4,6 +4,13 @@
 
 {% block content %}
  <div class="container mx-auto p-6">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-3 rounded {{ message.tags }} {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <h1 class="text-3xl font-bold mb-6">Olá, {{ request.user.username }}</h1>
 
         <div class="flex space-x-4 mb-6">

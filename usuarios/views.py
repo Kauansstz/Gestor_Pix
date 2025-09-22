@@ -99,11 +99,9 @@ def dashboard_view(request):
 
 # Função de autenticação custom (MySQL)
 def authenticate_mysql(username, password):
-    """
-    Exemplo de autenticação manual no MySQL.
-    Retorna dict com 'id' e 'username' se válido, senão None
-    """
     from django.db import connection
+    from django.contrib.auth.hashers import check_password
+
     cursor = connection.cursor()
     cursor.execute(
         "SELECT id, username, password FROM usuarios_user WHERE username = %s", [username]

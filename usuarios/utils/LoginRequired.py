@@ -1,12 +1,6 @@
 from django.shortcuts import redirect
 from django.db import connection
 
-class SessionUser:
-    def __init__(self, user_id, username):
-        self.id = user_id
-        self.username = username
-        self.is_authenticated = True
-
 # Função para autenticar usuário via MySQL
 def authenticate_mysql(username, password):
     with connection.cursor() as cursor:
@@ -21,9 +15,8 @@ def authenticate_mysql(username, password):
 
 def login_required_session(view_func):
     def wrapper(request, *args, **kwargs):
-        if not request.session.get('user_id'):
+        if not request.user.is_authenticated:
             return redirect('usuarios:login')
         # Simula request.user
-        request.user = SessionUser('user_id','username')
         return view_func(request, *args, **kwargs)
     return wrapper
