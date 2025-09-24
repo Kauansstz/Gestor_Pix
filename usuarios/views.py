@@ -1,11 +1,15 @@
 # usuarios/views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
+import json
 from django.contrib.auth import get_user_model, authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from pix.models import PixTransaction
 from vendas.models import Venda
-
+from django.utils import timezone
+from datetime import datetime, time, timedelta
 from .forms.UserCustom import LoginForm, RegisterForm  # forms personalizados
 
 User = get_user_model()
@@ -64,35 +68,61 @@ def cadastro_view(request):
 # Dashboard
 @login_required
 def dashboard_view(request):
-    # Calcula entradas e saídas
-    total_entrada = sum(p.valor for p in PixTransaction.objects.all())
-    total_saida = sum(v.valor for v in Venda.objects.all())
+    hoje = timezone.localdate()
+    dias = [hoje - timedelta(days=i) for i in range(6, -1, -1)]
 
-    # Histórico de transações
-    transacoes = []
+    entradas_diarias = []
+    saidas_diarias = []
 
-    for p in PixTransaction.objects.all():
-        transacoes.append({
-            'data': p.created_at,
-            'tipo': 'Entrada',
-            'valor': p.valor
-        })
+    for dia in dias:
+        dia_inicio = datetime.combine(dia, time.min).replace(tzinfo=timezone.get_current_timezone())
+        dia_fim = datetime.combine(dia, time.max).replace(tzinfo=timezone.get_current_timezone())
 
-    for v in Venda.objects.all():
-        transacoes.append({
-            'data': v.data_venda,
-            'tipo': 'Saída',
-            'valor': v.valor
-        })
+        entrada = PixTransaction.objects.filter(
+            created_at__range=(dia_inicio, dia_fim)
+        ).aggregate(total=Sum('valor'))['total'] or 0
 
-    # Ordena por data decrescente
+        saida = Venda.objects.filter(
+            data_venda__range=(dia_inicio, dia_fim)
+        ).aggregate(total=Sum('valor'))['total'] or 0
+
+        entradas_diarias.append(float(entrada))
+        saidas_diarias.append(float(saida))
+
+    total_entrada = sum(entradas_diarias)
+    total_saida = sum(saidas_diarias)
+
+    transacoes = [
+        {'data': p.created_at, 'tipo': 'Entrada', 'valor': float(p.valor)}
+        for p in PixTransaction.objects.all()
+    ] + [
+        {'data': v.data_venda, 'tipo': 'Saída', 'valor': float(v.valor)}
+        for v in Venda.objects.all()
+    ]
     transacoes = sorted(transacoes, key=lambda x: x['data'], reverse=True)
 
+    transacoes_diarias = []
+    for i, dia in enumerate(dias):
+        crescimento = entradas_diarias[i] - saidas_diarias[i]
+        transacoes_diarias.append({
+            'data': dia.strftime('%d/%m'),
+            'entrada': f"R$ {entradas_diarias[i]:.2f}".replace('.', ','),
+            'saida': f"R$ {saidas_diarias[i]:.2f}".replace('.', ','),
+            'crescimento': f"R$ {crescimento:.2f}".replace('.', ','),
+        })
+
+    crescimento_liquido = [e - s for e, s in zip(entradas_diarias, saidas_diarias)]
+
     context = {
+        'labels_json': json.dumps([dia.strftime('%d/%m') for dia in dias]),
+        'entradas_json': json.dumps(entradas_diarias),
+        'saidas_json': json.dumps(saidas_diarias),
+        'crescimento_json': json.dumps(crescimento_liquido),
         'total_entrada': total_entrada,
         'total_saida': total_saida,
         'transacoes': transacoes,
-        'request_user': request.user,  # para templates
+        'transacoes_diarias': transacoes_diarias,
+        'request_user': request.user,
     }
     return render(request, "usuarios/dashboard.html", context)
 

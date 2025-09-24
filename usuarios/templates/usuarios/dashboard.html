@@ -3,76 +3,142 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
- <div class="container mx-auto p-6">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="mb-4 p-3 rounded {{ message.tags }} {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        <h1 class="text-3xl font-bold mb-6">Olá, {{ request.user.username }}</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Olá, {{ request.user.username }} 👋</h1>
 
-        <div class="flex space-x-4 mb-6">
-            <a href="{% url 'usuarios:logout' %}" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded font-semibold">
-                Sair
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex space-x-4">
+            <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-semibold">
+                Atualizar Dashboard 🔄
             </a>
         </div>
+        <a href="{% url 'usuarios:logout' %}" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded font-semibold">
+            Sair
+        </a>
+    </div>
 
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Gráfico linear -->
+        <div class="bg-white rounded shadow p-6 flex flex-col">
+            <h2 class="text-2xl font-bold mb-4">Crescimento Líquido (Últimos 7 dias)</h2>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+        <!-- Tabela diária de entradas e saídas -->
         <div class="bg-white rounded shadow p-6">
-            <h2 class="text-2xl font-bold mb-4">Transações</h2>
-
-            <div class="mb-4">
-                <span class="font-semibold">Total Entrada:</span> R$ {{ total_entrada }}
-            </div>
-            <div class="mb-4">
-                <span class="font-semibold">Total Saída:</span> R$ {{ total_saida }}
-            </div>
-
-            <table class="w-full border-collapse border">
+            <h2 class="text-2xl font-bold mb-4">Transações Diárias</h2>
+            <table class="w-full border-collapse border text-center">
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="border px-4 py-2">Data</th>
-                        <th class="border px-4 py-2">Tipo</th>
-                        <th class="border px-4 py-2">Valor</th>
+                        <th class="border px-4 py-2">Entradas (R$)</th>
+                        <th class="border px-4 py-2">Saídas (R$)</th>
+                        <th class="border px-4 py-2">Crescimento Líquido (R$)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for t in transacoes %}
-                    <tr class="text-center">
+                    {% for t in transacoes_diarias %}
+                    <tr class="hover:bg-gray-100">
                         <td class="border px-4 py-2">{{ t.data }}</td>
-                        <td class="border px-4 py-2">{{ t.tipo }}</td>
-                        <td class="border px-4 py-2">R$ {{ t.valor }}</td>
+                        <td class="border px-4 py-2">R$ {{ t.entrada }}</td>
+                        <td class="border px-4 py-2">R$ {{ t.saida }}</td>
+                        <td class="border px-4 py-2">R$ {{ t.crescimento}}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3" class="border px-4 py-2">Nenhuma transação encontrada</td>
+                        <td colspan="4" class="border px-4 py-2">Nenhuma transação encontrada</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            <div class="mt-4">
+                <div><span class="font-semibold">Total Entradas:</span> R$ {{ total_entrada }}</div>
+                <div><span class="font-semibold">Total Saídas:</span> R$ {{ total_saida }}</div>
+            </div>
         </div>
     </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('financeChart').getContext('2d');
-    const financeChart = new Chart(ctx, {
-        type: 'doughnut',
+    const labels = {{ labels_json|safe }};
+    const entradas = {{ entradas_json|safe }};
+    const saidas = {{ saidas_json|safe }};
+    const crescimento = {{ crescimento_json|safe }};
+
+    const ctx = document.getElementById('lineChart').getContext('2d');
+
+    const lineChart = new Chart(ctx, {
+        type: 'line',
         data: {
-            labels: ['Entrada', 'Saída'],
-            datasets: [{
-                label: 'R$',
-                data: [{{ total_entrada }}, {{ total_saida }}],
-                backgroundColor: ['#34D399', '#F87171'],
-            }]
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Crescimento Líquido',
+                    data: crescimento,
+                    borderColor: '#2563EB',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#2563EB',
+                    pointBorderColor: '#2563EB',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointStyle: 'circle'
+                },
+                {
+                    label: 'Entradas',
+                    data: entradas,
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#10B981',
+                    pointBorderColor: '#10B981',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: 'Saídas',
+                    data: saidas,
+                    borderColor: '#EF4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#EF4444',
+                    pointBorderColor: '#EF4444',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }
+            ]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: document.documentElement.classList.contains('dark') ? '#f9fafb' : '#000'
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': R$ ' + context.raw.toFixed(2);
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return 'R$ ' + value.toFixed(2); }
                     }
                 }
             }
