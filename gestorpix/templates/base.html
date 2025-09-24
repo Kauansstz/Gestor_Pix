@@ -16,38 +16,40 @@
     <title>{% block title %}GestorPix{% endblock %}</title>
 </head>
 <body class="bg-gray-100 font-sans">
-{% if request.user.is_authenticated %}
-    <div class="flex h-screen bg-gray-100">
-        <!-- Sidebar -->
-        <div id="sidebar" class="fixed top-0 left-0 h-screen bg-gray-800 text-white flex flex-col p-4 w-64 transition-all duration-300 z-50 links_pages">
-            <div class="flex justify-between items-center mb-6">
-                <div class="text-2xl font-bold title-gestor">Gestor de Pix</div>
-                <button id="toggleSidebar" class="text-white focus:outline-none config-btn">&#9776;</button>
+{% block asidebar %}
+    {% if request.user.is_authenticated %}
+        <div class="flex h-screen bg-gray-100">
+            <!-- Sidebar -->
+            <div id="sidebar" class="fixed top-0 left-0 h-screen bg-gray-800 text-white flex flex-col p-4 w-64 transition-all duration-300 z-50 links_pages">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="text-2xl font-bold title-gestor">Gestor de Pix</div>
+                    <button id="toggleSidebar" class="text-white focus:outline-none config-btn">&#9776;</button>
+                </div>
+
+                <a href="{% url 'usuarios:dashboard' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-house"></i>
+                    <span class="link-text">Dashboard</span>
+                </a>
+                <a href="{% url 'relatorios:listar_relatorios' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-file-text"></i>
+                    <span class="link-text">Relatórios</span>
+                </a>
+                <a href="{% url 'pix:listar_pix' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-x-diamond"></i>
+                    <span class="link-text">PIX</span>
+                </a>
+                <a href="{% url 'vendas:listar_vendas' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-coin"></i>
+                    <span class="link-text">Vendas</span>
+                </a>
+                <a href="{% url 'usuarios:logout' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="link-text">Sair</span>
+                </a>
+
             </div>
-
-            <a href="{% url 'usuarios:dashboard' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
-                <i class="bi bi-house"></i>
-                <span class="link-text">Dashboard</span>
-            </a>
-            <a href="{% url 'relatorios:listar_relatorios' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
-                <i class="bi bi-file-text"></i>
-                <span class="link-text">Relatórios</span>
-            </a>
-            <a href="{% url 'pix:listar_pix' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
-                <i class="bi bi-x-diamond"></i>
-                <span class="link-text">PIX</span>
-            </a>
-            <a href="{% url 'vendas:listar_vendas' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
-                <i class="bi bi-coin"></i>
-                <span class="link-text">Vendas</span>
-            </a>
-            <a href="{% url 'usuarios:logout' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
-                <i class="bi bi-box-arrow-right"></i>
-                <span class="link-text">Sair</span>
-            </a>
-
-        </div>
-{% endif %}
+            {% endif %}
+            {% endblock asidebar %}
     <!-- Conteúdo principal -->
     <div id="mainContent" class="ml-64 flex-1 p-6 transition-all duration-300">
         {% block content %}

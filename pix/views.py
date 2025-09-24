@@ -109,7 +109,7 @@ def gerar_pix(request):
             messages.error(request, 'Erro ao gerar Pix.')
     else:
         form = PixForm()
-    return render(request, 'pix/gerar_pix.html', {'form': form})
+    return render(request, 'pix/gerar_pix_sucesso.html', {'form': form})
 
 # Webhook PicPay
 @csrf_exempt
