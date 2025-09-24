@@ -11,7 +11,8 @@ from vendas.models import Venda
 from django.utils import timezone
 from datetime import datetime, time, timedelta
 from .forms.UserCustom import LoginForm, RegisterForm  # forms personalizados
-
+import csv
+from django.http import HttpResponse
 User = get_user_model()
 
 
@@ -143,3 +144,66 @@ def authenticate_mysql(username, password):
         if db_password == password:
             return {'id': user_id, 'username': db_username}
     return None
+
+
+@login_required
+def exportar_transacoes_csv(request):
+    # Cria a resposta HTTP com cabeçalho para download CSV
+    response = HttpResponse(
+        content_type='text/csv; charset=utf-8',
+    )
+    response['Content-Disposition'] = 'attachment; filename="transacoes.csv"'
+    response.write('\ufeff')
+
+    writer = csv.writer(response, delimiter=';')
+    # Cabeçalho do CSV
+    writer.writerow([
+        'Data',
+        'Entrada',
+        'Saída',
+        'Quem gerou o pagamento',
+        'Para qual usuário foi',
+        'Status',
+        'Vencimento',
+        'Produto',
+        'Quantidade',
+        'Valor do Produto',
+        'Data de Venda',
+        'Criado por'
+    ])
+
+    # PixTransactions
+    for pix in PixTransaction.objects.all():
+        writer.writerow([
+            pix.created_at.strftime('%d/%m/%Y às %H:%M:%S'),
+            float(pix.valor),  # Entrada
+            0,  # Saída
+            pix.user.username,
+            pix.nome_pagador,
+            pix.status,
+            pix.vencimento.strftime('%d/%m/%Y') if pix.vencimento else '',
+            '',  # Produto vazio
+            '',  # Quantidade vazia
+            '',  # Valor do produto vazio
+            '',  # Data de venda vazia
+            pix.user.username
+        ])
+
+    # Vendas
+    for venda in Venda.objects.all():
+        writer.writerow([
+            venda.data_venda.strftime('%d/%m/%Y às %H:%M:%S'),
+            0,  # Entrada
+            float(venda.valor),  # Saída
+            venda.criado_por.username,
+            venda.cliente,
+            'concluída',  # Status fixo (pode ajustar se quiser)
+            '',  # Vencimento vazio
+            venda.produto,
+            venda.quantidade,
+            float(venda.valor),
+            venda.data_venda.strftime('%d/%m/%Y às %H:%M:%S'),
+            venda.criado_por.username
+        ])
+
+    return response

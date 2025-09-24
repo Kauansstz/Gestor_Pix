@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('cadastro/', views.cadastro_view, name='cadastro'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('exportar/transacoes/', views.exportar_transacoes_csv, name='exportar_transacoes'),
 ]
