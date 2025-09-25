@@ -1,8 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>
-    teste
-</h2>
-{% endblock content %}
+<form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto mt-20">
+    {% csrf_token %}
+    
+    {{ form.nome_cliente.label_tag }}
+    {{ form.nome_cliente }}
 
+    {{ form.numero_cliente.label_tag }}
+    {{ form.numero_cliente }}
+
+    {{ form.tipo_midia.label_tag }}
+    {{ form.tipo_midia }}
+
+    <!-- Campos dinâmicos -->
+    <div id="texto_field" class="mb-6 hidden">
+        {{ form.msg_text.label_tag }}
+        {{ form.msg_text }}
+    </div>
+
+    <div id="imagem_field" class="mb-6 hidden">
+        {{ form.cover.label_tag }}
+        {{ form.cover }}
+        {{ form.link_pix.label_tag }}
+        {{ form.link_pix }}
+    </div>
+
+    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-md">
+        Enviar
+    </button>
+</form>
+
+<script>
+const tipoMidia = document.getElementById('tipo_midia');
+const textoField = document.getElementById('texto_field');
+const imagemField = document.getElementById('imagem_field');
+
+tipoMidia.addEventListener('change', function() {
+    if (this.value === 'TEXT') {
+        textoField.classList.remove('hidden');
+        imagemField.classList.add('hidden');
+    } else if (this.value === 'IMAGEM') {
+        textoField.classList.add('hidden');
+        imagemField.classList.remove('hidden');
+    } else {
+        textoField.classList.add('hidden');
+        imagemField.classList.add('hidden');
+    }
+});
+</script>
+{% endblock content %}
