@@ -42,7 +42,72 @@
                     <i class="bi bi-coin"></i>
                     <span class="link-text">Vendas</span>
                 </a>
-                <a href="{% url 'usuarios:logout' %}" class="mb-4 flex items-center px-4 py-2 rounded hover:bg-gray-700">
+                <nav class="flex flex-col">
+                    <!-- Aba principal WhatsApp -->
+                    <button 
+                        onclick="toggleMenu('whatsappMenu', 'whatsappIcon')" 
+                        class="mb-4 flex items-center px-4 py-2 mr-16 -mt-5 rounded hover:bg-gray-700 w-full text-left">
+                        <i class="bi bi-whatsapp mr-2"></i>
+                        <span class="link-text">WhatsApp</span>
+                        <i id="whatsappIcon" class="bi bi-chevron-down ml-6 transition-transform duration-300"></i>
+                    </button>
+
+                    <!-- Submenu WhatsApp -->
+                    <div id="whatsappMenu" class="hidden flex-col" style="margin-right:48px;">
+                        
+                        <!-- Clientes com submenu -->
+                        <button 
+                            onclick="toggleMenu('clientesMenu', 'clientesIcon')" 
+                            class="mb-2 flex items-center pl-12 py-2 rounded hover:bg-gray-600 w-full text-left">
+                            <i class="bi bi-people"></i>
+                            <span class="ml-2">Clientes</span>
+                            <i id="clientesIcon" class="bi bi-chevron-down ml-auto transition-transform duration-300"></i>
+                        </button>
+
+                        <!-- Sub-submenu Clientes -->
+                        <div id="clientesMenu" class="hidden flex-col">
+                            <a href="/clientes/lista" class="mb-2 flex items-center pl-12 py-1 rounded hover:bg-gray-500">
+                                <i class="bi bi-list"></i>
+                                <span class="ml-2">Lista de Clientes</span>
+                            </a>
+                            <a href="/clientes/novo" class="mb-2 flex items-center pl-12 py-1 rounded hover:bg-gray-500">
+                                <i class="bi bi-person-plus"></i>
+                                <span class="ml-2">Novo Cliente</span>
+                            </a>
+                            <a href="/clientes/importar" class="mb-2 flex items-center pl-12 py-1 rounded hover:bg-gray-500">
+                                <i class="bi bi-upload"></i>
+                                <span class="ml-2">Importar</span>
+                            </a>
+                        </div>
+
+                        <!-- Conversas -->
+                        <a href="/conversas" class="mb-2 flex items-center pl-8 py-2 rounded hover:bg-gray-600">
+                            <i class="bi bi-chat-dots"></i>
+                            <span class="ml-2">Conversas</span>
+                        </a>
+
+                        <!-- Pagamentos -->
+                        <a href="/pagamentos" class="mb-2 flex items-center pl-8 py-2 rounded hover:bg-gray-600">
+                            <i class="bi bi-cash-coin"></i>
+                            <span class="ml-2">Pagamentos</span>
+                        </a>
+
+                        <!-- Relatórios -->
+                        <a href="/relatorios" class="mb-2 flex items-center pl-8 py-2 rounded hover:bg-gray-600">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span class="ml-2">Relatórios</span>
+                        </a>
+                    </div>
+
+                    <!-- Fora do WhatsApp -->
+                    <a href="/config" class="mb-4 flex items-center mr-20 mt-4 px-4 py-2 rounded hover:bg-gray-700">
+                        <i class="bi bi-gear"></i>
+                        <span class="link-text">Configurações</span>
+                    </a>
+                </nav>
+
+
+                <a href="{% url 'usuarios:logout' %}" class="mb-4 flex items-center px-4 py-2 -mt-6 rounded hover:bg-gray-700">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="link-text">Sair</span>
                 </a>
@@ -73,6 +138,23 @@
       
     }); 
     
+</script>
+<script>
+    function toggleMenu(menuId, iconId) {
+        const menu = document.getElementById(menuId);
+        const icon = document.getElementById(iconId);
+
+        menu.classList.toggle("hidden");
+
+        // Alterna o ícone de seta
+        if (menu.classList.contains("hidden")) {
+            icon.classList.remove("bi-chevron-up");
+            icon.classList.add("bi-chevron-down");
+        } else {
+            icon.classList.remove("bi-chevron-down");
+            icon.classList.add("bi-chevron-up");
+        }
+    }
 </script>
 </body>
 </html>
