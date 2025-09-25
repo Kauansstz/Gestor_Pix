@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     "vendas",
     "pix",
     "relatorios",
-   
+    "whatsapp",
     'widget_tweaks',
 
 
