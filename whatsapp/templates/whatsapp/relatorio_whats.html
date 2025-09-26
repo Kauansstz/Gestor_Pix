@@ -10,6 +10,7 @@
         <th>Tipo de mídia enviada</th>
         <th>Status da mensagem</th>
         <th>Data de envio</th>
+        <th></th>
     </tr>
     {% for r in relatorios %}
         <tr class="text-center">
@@ -19,6 +20,10 @@
             <td>{{r.tipo_midia}}</td>
             <td>{{r.mensagem_id}}</td>
             <td>{{r.data_envio}}</td>
+            <td>
+                <a href="{% url 'relatorios:detail' r.id %}" class="bg-yellow-500 text-white px-2 py-1 rounded">Visualizar</a>
+                <a href="{% url 'relatorios:editar_relatorio' r.id %}" class="bg-yellow-500 text-white px-2 py-1  rounded">Editar</a>
+            </td>
         </tr>
     {% endfor %}
 </table>
