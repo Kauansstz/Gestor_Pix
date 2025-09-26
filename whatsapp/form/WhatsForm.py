@@ -16,7 +16,7 @@ class WhatsCustomForm(forms.ModelForm):
         labels = {
             "nome_cliente": "Nome do Cliente",
             "numero_cliente": "Número do Cliente",
-            "tipo_midia": "Tipo de Midía",
+            "tipo_midia": "Tipo de Mídia",
             "msg_text": "Mensagem de Texto",
             "cover": "Arquivo",
             "link_pix": "Links"
