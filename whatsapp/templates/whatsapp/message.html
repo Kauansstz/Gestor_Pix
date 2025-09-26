@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto mt-20">
+<form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-3 bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto mt-20">
     {% csrf_token %}
     
     {{ form.nome_cliente.label_tag }}
@@ -26,7 +26,7 @@
         {{ form.link_pix }}
     </div>
 
-    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-md">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 w-28 rounded-md">
         Enviar
     </button>
 </form>
