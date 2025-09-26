@@ -12,6 +12,7 @@
         <th>Data</th>
         <th>Criado Por</th>
         <th>Atualizado Em</th>
+        <th></th>
     </tr>
     {% for r in relatorios %}
     <tr>
@@ -22,7 +23,8 @@
         <td>{{ r.criado_por.username }}</td>
         <td>{{ r.atualizado_em }}</td>
         <td>
-            <a href="{% url 'relatorios:editar_relatorio' r.id %}" class="bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
+            <a href="{% url 'relatorios:detail' r.id %}" class="bg-yellow-500 text-white px-2 py-1 rounded">Visualizar</a>
+            <a href="{% url 'relatorios:editar_relatorio' r.id %}" class="bg-yellow-500 text-white px-2 py-1  rounded">Editar</a>
         </td>
     </tr>
     {% endfor %}
