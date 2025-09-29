@@ -8,8 +8,8 @@
 
     <form method="POST" enctype="multipart/form-data" class="space-y-5">
         {% csrf_token %}
-        {{ form.arquivo.label_tag }}
-        {{ form.arquivo }}
+        {{ form.file.label_tag }}
+        {{ form.file }}
 
         <div class="flex justify-end">
             <button type="submit"

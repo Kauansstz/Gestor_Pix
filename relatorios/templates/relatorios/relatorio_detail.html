@@ -2,8 +2,8 @@
 {% block title %}Detalhe do Relatório{% endblock %}
 
 {% block content %}
-<div class="flex justify-center items-center mt-28  bg-gray-100">
-    <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-3xl">
+<div class="flex justify-center items-center mt-20 bg-gray-100 min-h-screen">
+    <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-3xl">
         <!-- Título -->
         <h1 class="text-3xl font-extrabold text-gray-800 border-b pb-4 mb-6">
             {{ relatorio.titulo }}
@@ -14,11 +14,11 @@
             {{ relatorio.descricao }}
         </p>
 
-        <!-- Botão Voltar -->
-        <div class="mt-8">
+        <!-- Botões -->
+        <div class="flex justify-start mt-8">
             <a href="{% url 'relatorios:listar_relatorios' %}"
-               class="bg-gray-600 hover:bg-gray-700 transition-all text-white px-5 py-2 rounded-lg shadow-md">
-                ← Voltar para Relatórios
+               class="flex items-center bg-gray-200 hover:bg-gray-300 transition-colors text-gray-800 font-semibold px-5 py-2 rounded-lg shadow-md">
+                ← Voltar
             </a>
         </div>
     </div>

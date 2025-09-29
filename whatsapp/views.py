@@ -102,12 +102,12 @@ def new_client(request):
         form = WhatsCustomForm()
     return render(request, "whatsapp/client/new_client.html", {"client": form, })
 
-@login_required_session
+
 def import_client(request):
     if request.method == 'POST':
-        form = WhatsCustomForm(request.POST, request.FILE)
-        if form.is_valid:
-            arquivo = request.FILE["file"]
+        form = WhatsCustomForm(request.POST, request.FILES)
+        if form.is_valid():  
+            arquivo = request.FILES["file"]
             try:
                 if arquivo.name.endswith(".csv"):
                     df = pd.read_csv(arquivo)
@@ -129,20 +129,21 @@ def import_client(request):
                         continue
                         
                     WhatsCustom.objects.create(
-                        nome_cliente = row.get("nome_cliente", ""),
-                        numero_cliente = numero,
-                        email=row.get("email",""),
-                        status_cliente= row.get("status_cliente", "Ativo"),
-                        observacao = row.get("observacao", "")
+                        nome_cliente=row.get("nome_cliente", ""),
+                        numero_cliente=numero,
+                        email=row.get("email", ""),
+                        status_cliente=row.get("status_cliente", "Ativo"),
+                        observacao=row.get("observacao", "")
                     )
-                    importados +=1
+                    importados += 1
                     
                 messages.success(request, f"{importados} clientes importados, {ignorados} ignorados.")
                 return redirect("whats:importar_clientes")
             except Exception as e:
                 messages.error(request, f"Erro ao processar o arquivo: {e}")
-        
-        else:
-            form = WhatsCustomForm()
-        return render(request, "whatsapp/client/import.html", {"form": form})
+    else:
+        form = WhatsCustomForm()
+
+    return render(request, "whatsapp/client/import.html", {"form": form})
+
                     

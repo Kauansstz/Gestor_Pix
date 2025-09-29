@@ -61,7 +61,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'suitecrm',            # nome do banco SuiteCRM
-        'USER': 'root',       # usuário criado
+        'USER': 'kauan',       # usuário criado
         'PASSWORD': 'Kauan20145!',      # senha do usuário
         'HOST': '127.0.0.1',           # geralmente localhost
         'PORT': '3306',                # porta padrão do MySQL
