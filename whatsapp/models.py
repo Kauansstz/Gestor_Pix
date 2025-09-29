@@ -33,7 +33,7 @@ class WhatsCustom(models.Model):
     tipo_midia = models.CharField(max_length=20, choices=TIPO_MIDIA, default="--------")
     link_pix = models.URLField()
     cover = models.ImageField(upload_to="static/covers/%Y/%m/%d/", blank=True, default="")
-    file = models.FileField(label="Selecione o arquivo (Excel ou CSV)" , upload_to="static/file/%Y/%m/%d/", blank=True, default="")
+    file = models.FileField(upload_to="static/file/%Y/%m/%d/", blank=True, default="")
     msg_text = models.CharField(max_length=1000,default="", blank=True)
     email = models.CharField(blank=True, max_length=255)
     status_cliente = models.CharField(max_length=255, blank=True, choices=STATUS_CLIENTE)
