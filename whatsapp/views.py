@@ -1,10 +1,12 @@
-import csv
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
 from whatsapp.form.WhatsForm import WhatsCustomForm
-from django.contrib import messages
-from usuarios.utils.LoginRequired import login_required_session
 from .models import WhatsCustom
+from django.shortcuts import get_object_or_404, redirect, render
+from usuarios.utils.LoginRequired import login_required_session
+from django.contrib import messages
+import pandas as pd
+import csv
+
 
 @login_required_session
 def message(request):
@@ -99,3 +101,48 @@ def new_client(request):
     else:
         form = WhatsCustomForm()
     return render(request, "whatsapp/client/new_client.html", {"client": form, })
+
+@login_required_session
+def import_client(request):
+    if request.method == 'POST':
+        form = WhatsCustomForm(request.POST, request.FILE)
+        if form.is_valid:
+            arquivo = request.FILE["file"]
+            try:
+                if arquivo.name.endswith(".csv"):
+                    df = pd.read_csv(arquivo)
+                else:
+                    df = pd.read_excel(arquivo)
+                
+                importados = 0
+                ignorados = 0
+                
+                for _, row in df.iterrows():
+                    numero = str(row.get("numero_cliente", "")).strip()
+                    
+                    if not numero:
+                        ignorados += 1
+                        continue
+                    
+                    if WhatsCustom.objects.filter(numero_cliente=numero).exists():
+                        ignorados += 1
+                        continue
+                        
+                    WhatsCustom.objects.create(
+                        nome_cliente = row.get("nome_cliente", ""),
+                        numero_cliente = numero,
+                        email=row.get("email",""),
+                        status_cliente= row.get("status_cliente", "Ativo"),
+                        observacao = row.get("observacao", "")
+                    )
+                    importados +=1
+                    
+                messages.success(request, f"{importados} clientes importados, {ignorados} ignorados.")
+                return redirect("whats:importar_clientes")
+            except Exception as e:
+                messages.error(request, f"Erro ao processar o arquivo: {e}")
+        
+        else:
+            form = WhatsCustomForm()
+        return render(request, "whatsapp/client/import.html", {"form": form})
+                    
