@@ -3,7 +3,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 class WhatsCustom(models.Model):
     TIPO_MIDIA =[
-        ("--------", "--------"),
+        
         ("TEXT", "Texto"),
         ("IMAGEM", "Imagem"),
         ]
@@ -13,6 +13,11 @@ class WhatsCustom(models.Model):
         ("DELIVERED", "Entregue"),
         ("READ", "Lida"),
         ("ERROR", "Erro"),
+    ]
+    STATUS_CLIENTE =[
+        
+        ("ATIVO", "Ativo"),
+        ("INATIVO", "Inativo"),     
     ]
     numero_valido = RegexValidator(
         regex=r'^\d+$',
@@ -29,6 +34,9 @@ class WhatsCustom(models.Model):
     link_pix = models.URLField()
     cover = models.ImageField(upload_to="static/covers/%Y/%m/%d/", blank=True, default="")
     msg_text = models.CharField(max_length=1000,default="", blank=True)
+    email = models.CharField(blank=True, max_length=255)
+    status_cliente = models.CharField(max_length=255, blank=True, choices=STATUS_CLIENTE)
+    observacao= models.CharField(max_length=1000, blank=True, null=True)
     data_envio = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50,  choices=STATUS_MSG, default="PENDING")
     erro = models.TextField(blank=True, null=True)

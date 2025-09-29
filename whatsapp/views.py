@@ -85,3 +85,17 @@ def editar_relatorio(request, pk):
         form = WhatsCustomForm(instance=relatorio)
 
     return render(request, 'whatsapp/editar_relatorio.html', {'form': form, 'relatorio': relatorio})
+
+@login_required_session
+def new_client(request):
+    if request.method == 'POST':
+        form = WhatsCustomForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Cliente cadastrado!')
+            return redirect('whats:new_client')
+        else:
+            messages.error(request, "Erro ao cadastrar o cliente")
+    else:
+        form = WhatsCustomForm()
+    return render(request, "whatsapp/client/new_client.html", {"client": form, })
