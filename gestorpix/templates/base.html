@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/main.js' %}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -19,6 +20,20 @@
 <body class="bg-gray-100 font-sans">
 {% block asidebar %}
     {% if request.user.is_authenticated %}
+        {% if notificacoes and messages %}
+            <div class="fixed top-5 right-5 z-50 space-y-2"id="messages-container">
+                {% for message in messages %}
+                    <div class="p-3 rounded shadow-md
+                        {% if message.tags == 'error' %}
+                            bg-red-500 text-white
+                        {% else %}
+                            bg-green-500 text-white
+                        {% endif %} transition-opacity duration-300">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="flex h-screen bg-gray-100">
             <!-- Sidebar -->
             <div id="sidebar" class="fixed top-0 left-0 h-screen bg-gray-800 text-white flex flex-col p-4 w-64 transition-all duration-300 z-50 links_pages">
@@ -96,7 +111,7 @@
                     </div>
 
                     <!-- Fora do WhatsApp -->
-                    <a href="/config" class="mb-4 flex items-center mr-20 mt-4 px-4 py-2 rounded hover:bg-gray-700">
+                    <a href="{% url "config:configuracoes" %}" class="mb-4 flex items-center mr-20 mt-4 px-4 py-2 rounded hover:bg-gray-700">
                         <i class="bi bi-gear"></i>
                         <span class="link-text">Configurações</span>
                     </a>
@@ -151,6 +166,17 @@
             icon.classList.add("bi-chevron-up");
         }
     }
+</script>
+<script>
+    // Aguarda 5 segundos e remove todas as mensagens
+    setTimeout(() => {
+        const container = document.getElementById('messages-container');
+        if (container) {
+            container.style.transition = "opacity 0.5s ease";
+            container.style.opacity = 0;
+            setTimeout(() => container.remove(), 500); // remove do DOM
+        }
+    }, 2000); // 5000ms = 5s
 </script>
 </body>
 </html>

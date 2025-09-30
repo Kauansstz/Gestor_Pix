@@ -145,5 +145,3 @@ def import_client(request):
         form = WhatsCustomForm()
 
     return render(request, "whatsapp/client/import.html", {"form": form})
-
-                    

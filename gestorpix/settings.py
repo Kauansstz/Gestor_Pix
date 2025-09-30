@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "vendas",
     "pix",
     "relatorios",
+    "configuracao",
     "whatsapp",
     'widget_tweaks',
 
@@ -51,6 +52,8 @@ TEMPLATES = [
             "django.template.context_processors.request",
             "django.contrib.auth.context_processors.auth",
             "django.contrib.messages.context_processors.messages",
+            'configuracao.context_processors.tema_e_notificacao_context',
+
         ]},
     }
 ]

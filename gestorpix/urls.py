@@ -13,6 +13,7 @@ urlpatterns = [
     path('pix/', include('pix.urls')),
     path('relatorios/', include('relatorios.urls')),
     path('whatsapp/', include('whatsapp.urls')),
+    path('configuracao/', include('configuracao.urls')),
     path('', home, name='home'),
 ]
 
