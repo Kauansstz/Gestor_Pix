@@ -19,6 +19,8 @@ urlpatterns = [
     # path('bots/novo/', views.criar_bot, name='criar_bot'),
     # path('bots/<int:id>/editar/', views.editar_bot, name='editar_bot'),
     # path('bots/<int:id>/excluir/', views.excluir_bot, name='excluir_bot'),
+    #path('funil/', views.funil, name='funil'),
+    # path('cliente/<int:id>/', views.detalhe_cliente, name='detalhe_cliente'),
 ]
 
 

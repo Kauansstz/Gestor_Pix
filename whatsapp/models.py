@@ -68,3 +68,40 @@ class WhatsCustom(models.Model):
 
 #     def __str__(self):
 #         return f"Agendamento para {self.contato.nome} em {self.data_envio}"
+
+
+# CRM 
+# from django.db import models
+
+# # Contato / Lead
+# class Cliente(models.Model):
+#     STATUS_CHOICES = [
+#         ('LEAD', 'Lead'),
+#         ('CONTATO', 'Contato'),
+#         ('PROPOSTA', 'Proposta'),
+#         ('FECHADO', 'Fechado'),
+#     ]
+#     nome = models.CharField(max_length=100)
+#     telefone = models.CharField(max_length=20)
+#     email = models.EmailField(blank=True, null=True)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='LEAD')
+#     data_criacao = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return self.nome
+
+# # Histórico de mensagens
+# class Mensagem(models.Model):
+#     TIPO_CHOICES = [
+#         ('ENVIADO', 'Enviado'),
+#         ('RECEBIDO', 'Recebido'),
+#         ('TEMPLATE', 'Template'),
+#     ]
+#     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='mensagens')
+#     texto = models.TextField()
+#     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+#     status = models.CharField(max_length=50, blank=True)  # enviado, entregue, lida
+#     data_envio = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f"{self.tipo} - {self.cliente.nome}"

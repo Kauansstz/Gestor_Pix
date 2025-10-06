@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+    <h1 class="text-2xl font-semibold mb-6">Funil de Vendas</h1>
+    <div class="grid grid-cols-4 gap-4">
+        {% for status, clientes in funil.items %}
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+            <h2 class="font-bold mb-3">{{ status }}</h2>
+            {% for cliente in clientes %}
+            <div class="bg-white p-2 mb-2 rounded-md shadow hover:bg-gray-50 cursor-pointer"
+                 onclick="window.location.href='{% url 'detalhe_cliente' cliente.id %}'">
+                <p class="font-medium">{{ cliente.nome }}</p>
+                <p class="text-sm text-gray-600">{{ cliente.telefone }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 text-sm">Nenhum cliente</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

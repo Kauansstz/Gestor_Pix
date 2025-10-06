@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">{{ cliente.nome }} ({{ cliente.status }})</h1>
+    <p class="mb-4 text-gray-700">Telefone: {{ cliente.telefone }}</p>
+    
+    <form method="POST" class="mb-6">
+        {% csrf_token %}
+        <textarea name="mensagem" rows="3" class="w-full border p-2 rounded-md" placeholder="Escreva uma mensagem"></textarea>
+        <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Enviar Mensagem</button>
+    </form>
+
+    <h2 class="text-xl font-semibold mb-2">Histórico de Mensagens</h2>
+    <div class="space-y-2 max-h-96 overflow-y-auto">
+        {% for msg in mensagens %}
+        <div class="p-2 border-l-4 {% if msg.tipo == 'ENVIADO' %}border-blue-500{% else %}border-green-500{% endif %} bg-gray-50 rounded-md">
+            <p class="text-sm">{{ msg.texto }}</p>
+            <p class="text-xs text-gray-500">Tipo: {{ msg.tipo }} | Status: {{ msg.status }} | {{ msg.data_envio }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -255,3 +255,45 @@ def import_client(request):
 
 #     contatos = Contato.objects.all()
 #     return render(request, 'criar_agendamento.html', {'contatos': contatos})
+
+# CRM
+# from django.shortcuts import render, get_object_or_404, redirect
+# from .models import Cliente, Mensagem
+# import requests
+# from django.utils import timezone
+
+# WHATSAPP_TOKEN = "SEU_TOKEN_DA_META"
+# WHATSAPP_PHONE_ID = "SEU_PHONE_ID"
+
+# # Funil Kanban
+# def funil(request):
+#     clientes = Cliente.objects.all()
+#     funil = {
+#         'LEAD': clientes.filter(status='LEAD'),
+#         'CONTATO': clientes.filter(status='CONTATO'),
+#         'PROPOSTA': clientes.filter(status='PROPOSTA'),
+#         'FECHADO': clientes.filter(status='FECHADO'),
+#     }
+#     return render(request, 'funil.html', {'funil': funil})
+
+# # Detalhes do cliente + envio de mensagens
+# def detalhe_cliente(request, id):
+#     cliente = get_object_or_404(Cliente, id=id)
+#     if request.method == 'POST':
+#         texto = request.POST['mensagem']
+#         # Envio via WhatsApp API
+#         url = f"https://graph.facebook.com/v17.0/{WHATSAPP_PHONE_ID}/messages"
+#         headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}", "Content-Type": "application/json"}
+#         payload = {
+#             "messaging_product": "whatsapp",
+#             "to": cliente.telefone,
+#             "type": "text",
+#             "text": {"body": texto}
+#         }
+#         response = requests.post(url, headers=headers, json=payload)
+#         status_envio = "enviado" if response.status_code == 200 else "erro"
+#         # Salvar no histórico
+#         Mensagem.objects.create(cliente=cliente, texto=texto, tipo="ENVIADO", status=status_envio)
+#         return redirect('detalhe_cliente', id=cliente.id)
+#     mensagens = cliente.mensagens.all().order_by('-data_envio')
+#     return render(request, 'detalhe_cliente.html', {'cliente': cliente, 'mensagens': mensagens})
