@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+    <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
+
+    <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h2>Total Enviadas</h2>
+            <p class="text-2xl font-bold">{{ total_enviadas }}</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h2>Total Recebidas</h2>
+            <p class="text-2xl font-bold">{{ total_recebidas }}</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h2>Taxa Entrega</h2>
+            <p class="text-2xl font-bold">{{ taxa_entrega|floatformat:2 }}%</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+            <h2>Taxa Leitura</h2>
+            <p class="text-2xl font-bold">{{ taxa_leitura|floatformat:2 }}%</p>
+        </div>
+    </div>
+
+    <canvas id="funilChart" class="bg-white p-4 rounded-lg shadow"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('funilChart').getContext('2d');
+const labels = [{% for item in funil_count %}'{{ item.status }}',{% endfor %}];
+const data = {
+    labels: labels,
+    datasets: [{
+        label: 'Clientes por Status',
+        data: [{% for item in funil_count %}{{ item.total }},{% endfor %}],
+        backgroundColor: ['#3B82F6','#10B981','#F59E0B','#EF4444']
+    }]
+};
+new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: { responsive: true }
+});
+</script>
+{% endblock %}

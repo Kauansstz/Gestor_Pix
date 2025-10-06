@@ -297,3 +297,21 @@ def import_client(request):
 #         return redirect('detalhe_cliente', id=cliente.id)
 #     mensagens = cliente.mensagens.all().order_by('-data_envio')
 #     return render(request, 'detalhe_cliente.html', {'cliente': cliente, 'mensagens': mensagens})
+# Dashboard / Métricas
+# def dashboard(request):
+#     total_enviadas = Mensagem.objects.filter(tipo='ENVIADO').count()
+#     total_recebidas = Mensagem.objects.filter(tipo='RECEBIDO').count()
+#     entregues = Mensagem.objects.filter(tipo='ENVIADO', status='entregue').count()
+#     lidas = Mensagem.objects.filter(tipo='ENVIADO', status='lido').count()
+#     taxa_entrega = (entregues / total_enviadas * 100) if total_enviadas else 0
+#     taxa_leitura = (lidas / total_enviadas * 100) if total_enviadas else 0
+
+#     funil_count = Cliente.objects.values('status').annotate(total=Count('id'))
+
+#     return render(request, 'dashboard.html', {
+#         'total_enviadas': total_enviadas,
+#         'total_recebidas': total_recebidas,
+#         'taxa_entrega': taxa_entrega,
+#         'taxa_leitura': taxa_leitura,
+#         'funil_count': funil_count,
+#     })
