@@ -107,4 +107,9 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "gestorpix/static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
+CELERY_BEAT_SCHEDULE = {
+    'processar_agendamentos_cada_minuto': {
+        'task': 'app.tasks.processar_agendamentos',
+        'schedule': 60.0,  # a cada 1 minuto
+    },
+}

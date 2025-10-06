@@ -193,3 +193,65 @@ def import_client(request):
 #     response = requests.post(url, headers=headers, json=data)
 #     return JsonResponse(response.json())
 
+
+#bots!!!!!!!
+# from django.shortcuts import render, redirect, get_object_or_404
+# from .models import Bot
+
+# def lista_bots(request):
+#     bots = Bot.objects.all()
+#     return render(request, 'bots.html', {'bots': bots})
+
+# def criar_bot(request):
+#     if request.method == 'POST':
+#         Bot.objects.create(
+#             nome=request.POST['nome'],
+#             numero=request.POST['numero'],
+#             mensagem_auto=request.POST['mensagem_auto'],
+#             ativo='ativo' in request.POST
+#         )
+#         return redirect('lista_bots')
+#     return render(request, 'editar_bot.html', {'bot': None})
+
+# def editar_bot(request, id):
+#     bot = get_object_or_404(Bot, id=id)
+#     if request.method == 'POST':
+#         bot.nome = request.POST['nome']
+#         bot.numero = request.POST['numero']
+#         bot.mensagem_auto = request.POST['mensagem_auto']
+#         bot.ativo = 'ativo' in request.POST
+#         bot.save()
+#         return redirect('lista_bots')
+#     return render(request, 'editar_bot.html', {'bot': bot})
+
+# def excluir_bot(request, id):
+#     bot = get_object_or_404(Bot, id=id)
+#     bot.delete()
+#     return redirect('lista_bots')
+
+
+# Disparo de mensagens
+# from django.shortcuts import render, redirect
+# from .models import Contato, Agendamento
+# from django.utils import timezone
+
+# def listar_agendamentos(request):
+#     agendamentos = Agendamento.objects.all().order_by('data_envio')
+#     return render(request, 'agendamentos.html', {'agendamentos': agendamentos})
+
+# def criar_agendamento(request):
+#     if request.method == 'POST':
+#         contato_id = request.POST['contato']
+#         mensagem = request.POST['mensagem']
+#         data_envio = request.POST['data_envio']
+
+#         contato = Contato.objects.get(id=contato_id)
+#         Agendamento.objects.create(
+#             contato=contato,
+#             mensagem_template=mensagem,
+#             data_envio=data_envio
+#         )
+#         return redirect('listar_agendamentos')
+
+#     contatos = Contato.objects.all()
+#     return render(request, 'criar_agendamento.html', {'contatos': contatos})

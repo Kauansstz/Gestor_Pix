@@ -15,6 +15,10 @@ urlpatterns = [
     # path("conversas/", views.listar_conversas),
     # path("mensagens/<str:numero>/", views.buscar_mensagens),
     # path("enviar/", views.enviar_mensagem),
+    # path('bots/', views.lista_bots, name='lista_bots'),
+    # path('bots/novo/', views.criar_bot, name='criar_bot'),
+    # path('bots/<int:id>/editar/', views.editar_bot, name='editar_bot'),
+    # path('bots/<int:id>/excluir/', views.excluir_bot, name='excluir_bot'),
 ]
 
 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-8 max-w-4xl mx-auto bg-white rounded-xl shadow-md mt-10">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold">📅 Agendamentos de Mensagens</h1>
+        <a href="{% url 'criar_agendamento' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+            + Novo Agendamento
+        </a>
+    </div>
+
+    <table class="w-full border border-gray-200 rounded-lg overflow-hidden">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-3 text-left">Contato</th>
+                <th class="p-3 text-left">Mensagem</th>
+                <th class="p-3 text-left">Data de Envio</th>
+                <th class="p-3 text-left">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ag in agendamentos %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="p-3">{{ ag.contato.nome }}</td>
+                <td class="p-3">{{ ag.mensagem_template }}</td>
+                <td class="p-3">{{ ag.data_envio }}</td>
+                <td class="p-3">{% if ag.enviado %}<span class="text-green-600">Enviado</span>{% else %}<span class="text-red-500">Pendente</span>{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center p-4 text-gray-500">Nenhum agendamento.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

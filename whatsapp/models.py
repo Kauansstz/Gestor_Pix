@@ -41,3 +41,30 @@ class WhatsCustom(models.Model):
     data_envio = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50,  choices=STATUS_MSG, default="PENDING")
     erro = models.TextField(blank=True, null=True)
+    
+# Bots
+# class Bot(models.Model):
+#     nome = models.CharField(max_length=100)
+#     numero = models.CharField(max_length=20)
+#     mensagem_auto = models.TextField(blank=True)
+#     ativo = models.BooleanField(default=True)
+
+#     def __str__(self):
+#         return self.nome
+
+# Disparo de mensagens
+# class Contato(models.Model):
+#     nome = models.CharField(max_length=100)
+#     numero = models.CharField(max_length=20)
+
+#     def __str__(self):
+#         return f"{self.nome} ({self.numero})"
+
+# class Agendamento(models.Model):
+#     contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
+#     mensagem_template = models.TextField()
+#     data_envio = models.DateTimeField()
+#     enviado = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return f"Agendamento para {self.contato.nome} em {self.data_envio}"
