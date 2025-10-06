@@ -145,3 +145,51 @@ def import_client(request):
         form = WhatsCustomForm()
 
     return render(request, "whatsapp/client/import.html", {"form": form})
+
+
+# Quando api estiver disponivel
+# from django.shortcuts import render
+# from django.http import JsonResponse
+# import requests
+
+# WHATSAPP_TOKEN = "SEU_TOKEN_DO_META"
+# WHATSAPP_PHONE_ID = "SEU_PHONE_ID"  # vem do Meta App
+
+# def chat_view(request):
+#     """Renderiza o chat com histórico básico."""
+#     return render(request, "chat.html")
+
+# def listar_conversas(request):
+#     """Simula listagem de conversas (você pode integrar com seu banco)."""
+#     conversas = [
+#         {"nome": "João", "numero": "5511999999999", "ultima_msg": "Olá, tudo bem?"},
+#         {"nome": "Maria", "numero": "5511988888888", "ultima_msg": "Pedido enviado ✅"},
+#     ]
+#     return JsonResponse(conversas, safe=False)
+
+# def buscar_mensagens(request, numero):
+#     """Chama a API do WhatsApp (ou seu DB) para buscar mensagens do cliente."""
+#     # Exemplo fictício — você pode trocar por requisição real:
+#     mensagens = [
+#         {"texto": "Oi, tudo bem?", "tipo": "recebida"},
+#         {"texto": "Tudo ótimo, e você?", "tipo": "enviada"},
+#     ]
+#     return JsonResponse({"mensagens": mensagens})
+
+# def enviar_mensagem(request):
+#     """Envia mensagem de texto para o WhatsApp."""
+#     numero = request.POST.get("numero")
+#     texto = request.POST.get("mensagem")
+
+#     url = f"https://graph.facebook.com/v17.0/{WHATSAPP_PHONE_ID}/messages"
+#     headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
+#     data = {
+#         "messaging_product": "whatsapp",
+#         "to": numero,
+#         "type": "text",
+#         "text": {"body": texto}
+#     }
+
+#     response = requests.post(url, headers=headers, json=data)
+#     return JsonResponse(response.json())
+

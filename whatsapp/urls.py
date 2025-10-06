@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path # type: ignore
 from . import views
 
 app_name = 'whats'
@@ -11,4 +11,10 @@ urlpatterns = [
     path('client/listar_clientes', views.list_client, name='list_whatsapp'),
     path('client/new_client', views.new_client, name='new_client'),
     path("client/importar/", views.import_client, name="importar_clientes"),
+    # path("", views.chat_view, name="chat"), Quando api estiver disponivel
+    # path("conversas/", views.listar_conversas),
+    # path("mensagens/<str:numero>/", views.buscar_mensagens),
+    # path("enviar/", views.enviar_mensagem),
 ]
+
+

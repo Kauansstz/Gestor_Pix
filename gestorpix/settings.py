@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "configuracao",
     "whatsapp",
     'widget_tweaks',
-
+    'channels',
 
 ]
 
@@ -82,14 +82,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+
+
 AUTH_USER_MODEL = 'usuarios.User'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # padrão é correto
 SESSION_COOKIE_AGE = 14400  # 4 horas em segundos
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
-
 SESSION_SAVE_EVERY_REQUEST = True  # opcional, força salvar a cada request
-
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Sao_Paulo"
 USE_I18N = True
